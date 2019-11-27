@@ -24,9 +24,9 @@ def caso(datagrama):
     linha_serial.fila = b''
 
 caso(b'\x01')
-#caso(b'\x00\x01')
-#caso(b'ABCDEF')
-#caso(b'\x10\x20\x30\x40\x50')
-#caso(128*b' ')
-#caso(1024*b' ')
-#caso(1500*b' ')
+caso(b'\x00\x01')
+caso(b'ABCDEF')
+caso(b'\x10\x20\x30\x40\x50')
+caso(128*b' ')
+caso(1024*b' ')
+caso(1500*b' ')

@@ -39,6 +39,7 @@ class CamadaEnlace:
 class Enlace:
     #Atributo novo
     dgram = b''
+    veiodb = False
 
     def __init__(self, linha_serial):
         self.linha_serial = linha_serial
@@ -83,11 +84,20 @@ class Enlace:
         # apenas pedaços de um quadro, ou um pedaço de quadro seguido de um
         # pedaço de outro, ou vários quadros de uma vez só.
         lbytes = [dados[i:i+1] for i in range(len(dados))]
+        datagramlbytes = [self.dgram[i:i+1] for i in range(len(self.dgram))]
         datagrama = b''
-        for byte in lbytes:
-            #\xc0 no final
-            if byte == '\xc0' and self.dgram != b'':
-                print(self.dgram)
+        for i in range(len(lbytes)):
+            if lbytes[i] == b'\xc0' and self.dgram != b'':
                 self.callback(self.dgram)
-            else:
-                self.dgram += byte
+                self.dgram = b''
+            elif self.veiodb == True:
+                if lbytes[i] == b'\xdc':
+                    self.dgram = self.dgram + b'\xc0'
+                    self.veiodb = False
+                elif lbytes[i] == b'\xdd':
+                    self.dgram = self.dgram + b'\xdb'
+                    self.veiodb = False
+            elif lbytes[i] == b'\xdb':
+                self.veiodb = True
+            elif lbytes[i] != b'\xc0':
+                self.dgram += lbytes[i]
